@@ -12,12 +12,12 @@ public class AddObjectToAsset : EditorWindow {
         window.selectedObject = AssetDatabase.LoadAssetAtPath(childPath, typeof(Object)) as Object;
     }
 
-    void AddObjectTo(Object asset) {
-        Object objectCopy = Object.Instantiate(selectedObject);
-        objectCopy.name = selectedObject.name;
+    void AddObjectTo(Object parentAsset, Object childObject) {
+        Object objectCopy = Object.Instantiate(childObject);
+        objectCopy.name = childObject.name;
 
-        AssetDatabase.AddObjectToAsset(objectCopy, AssetDatabase.GetAssetPath(asset));
-        AssetDatabase.DeleteAsset(AssetDatabase.GetAssetPath(selectedObject));
+        AssetDatabase.AddObjectToAsset(objectCopy, AssetDatabase.GetAssetPath(parentAsset));
+        AssetDatabase.DeleteAsset(AssetDatabase.GetAssetPath(childObject));
         AssetDatabase.SaveAssets();
     }
 
@@ -38,7 +38,7 @@ public class AddObjectToAsset : EditorWindow {
         if (commandName == "ObjectSelectorClosed") {
             Object selectedAsset = EditorGUIUtility.GetObjectPickerObject();
             if (selectedAsset) {
-                AddObjectTo(selectedAsset);
+                AddObjectTo(selectedAsset, selectedObject);
             }
             Close();
         }
